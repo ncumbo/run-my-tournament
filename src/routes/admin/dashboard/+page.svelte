@@ -8,6 +8,7 @@
     TabNavigation,
     UserManagement,
   } from "$lib/components";
+  import RegistrationManagement from "$lib/components/admin/RegistrationManagement.svelte";
   import { auth, authActions } from "$lib/stores/auth";
   import { permissionChecker, roleActions } from "$lib/stores/permissions";
 
@@ -363,22 +364,7 @@
               {#if selectedManagementSection === "users"}
                 <UserManagement />
               {:else if selectedManagementSection === "registrations"}
-                <Card variant="default" padding="large">
-                  <div class="placeholder-content">
-                    <h2>🎯 Registration Management</h2>
-                    <p>Comprehensive registration management interface</p>
-                    <div class="feature-list">
-                      <div class="feature-item">📝 View all registrations</div>
-                      <div class="feature-item">
-                        ✏️ Edit registration details
-                      </div>
-                      <div class="feature-item">💳 Manage payment status</div>
-                      <div class="feature-item">👥 Team formation tools</div>
-                      <div class="feature-item">📧 Communication tools</div>
-                    </div>
-                    <Button variant="primary" disabled>🚧 Coming Soon</Button>
-                  </div>
-                </Card>
+                <RegistrationManagement />
               {:else if selectedManagementSection === "financial"}
                 <Card variant="default" padding="large">
                   <div class="placeholder-content">
@@ -675,8 +661,8 @@
      =========================== */
   .management-layout {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 2rem;
+    grid-template-columns: 320px 1fr;
+    gap: 1.5rem;
     min-height: 600px;
   }
 

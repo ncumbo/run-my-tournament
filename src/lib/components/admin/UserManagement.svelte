@@ -27,6 +27,9 @@
   let selectedUser: any = null;
   let loading = false;
   let error = "";
+  let searchTerm = "";
+  let filterRole = "all";
+  let filterStatus = "all";
 
   // Form state
   let newUser = {
@@ -50,6 +53,32 @@
   $: canManageRoles = currentUser
     ? $permissionChecker.hasPermission(parseInt(currentUser.id), "roles.manage")
     : false;
+
+  // Filtered users
+  $: filteredUsers = users.filter((user) => {
+    const matchesSearch =
+      searchTerm === "" ||
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesRole = filterRole === "all" || user.role === filterRole;
+    const matchesStatus =
+      filterStatus === "all" ||
+      (filterStatus === "active" && user.is_active) ||
+      (filterStatus === "inactive" && !user.is_active);
+
+    return matchesSearch && matchesRole && matchesStatus;
+  });
+
+  // User statistics
+  $: userStats = {
+    total: users.length,
+    active: users.filter((u) => u.is_active).length,
+    inactive: users.filter((u) => !u.is_active).length,
+    admins: users.filter((u) => u.role === "super_admin").length,
+    directors: users.filter((u) => u.role === "tournament_director").length,
+    managers: users.filter((u) => u.role === "registration_manager").length,
+  };
 
   onMount(() => {
     loadUsers();
@@ -88,6 +117,15 @@
           last_login: "2024-03-13T09:15:00Z",
           is_active: true,
         },
+        {
+          id: 4,
+          name: "Lisa Wong",
+          email: "lisa.wong@ibm.com",
+          role: "content_editor",
+          created_at: "2024-03-05T00:00:00Z",
+          last_login: "2024-03-10T16:45:00Z",
+          is_active: false,
+        },
       ];
     } catch (err) {
       error = "Failed to load users";
@@ -107,7 +145,6 @@
     error = "";
 
     try {
-      // In real app, make API call to create user
       const userId = users.length + 1;
 
       users = [
@@ -122,14 +159,12 @@
         },
       ];
 
-      // Assign role using permission system
       roleActions.assignRole(
         userId,
         newUser.role_id,
         parseInt(currentUser?.id || "1")
       );
 
-      // Reset form
       newUser = {
         name: "",
         email: "",
@@ -150,7 +185,6 @@
     error = "";
 
     try {
-      // Update user in array
       users = users.map((user) =>
         user.id === editUser.id
           ? {
@@ -162,7 +196,6 @@
           : user
       );
 
-      // Update role assignment
       roleActions.assignRole(
         editUser.id,
         editUser.role_id,
@@ -188,10 +221,23 @@
         user.id === userId ? { ...user, is_active: false } : user
       );
 
-      // Remove role assignment
       roleActions.removeRole(userId);
     } catch (err) {
       error = "Failed to deactivate user";
+      console.error(err);
+    } finally {
+      loading = false;
+    }
+  }
+
+  async function activateUser(userId: number) {
+    loading = true;
+    try {
+      users = users.map((user) =>
+        user.id === userId ? { ...user, is_active: true } : user
+      );
+    } catch (err) {
+      error = "Failed to activate user";
       console.error(err);
     } finally {
       loading = false;
@@ -223,19 +269,43 @@
       minute: "2-digit",
     });
   }
+
+  function clearFilters() {
+    searchTerm = "";
+    filterRole = "all";
+    filterStatus = "all";
+  }
 </script>
 
 <div class="user-management">
-  <div class="section-header">
-    <div class="header-content">
+  <!-- Header with Stats -->
+  <div class="management-header">
+    <div class="header-info">
       <h2>👥 User Management</h2>
-      <p>Manage admin users and their roles</p>
+      <p>
+        Manage admin users, roles, and permissions for the tournament system
+      </p>
     </div>
-    {#if canManageUsers}
-      <Button variant="primary" onclick={() => (showCreateUserModal = true)}>
-        ➕ Add New User
-      </Button>
-    {/if}
+
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-number">{userStats.total}</span>
+        <span class="stat-label">Total Users</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{userStats.active}</span>
+        <span class="stat-label">Active</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{userStats.inactive}</span>
+        <span class="stat-label">Inactive</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{userStats.admins + userStats.directors}</span
+        >
+        <span class="stat-label">Admins</span>
+      </div>
+    </div>
   </div>
 
   {#if error}
@@ -245,81 +315,155 @@
     </div>
   {/if}
 
-  <!-- Users List -->
-  <Card variant="default" padding="none">
-    <div class="users-table">
-      <div class="table-header">
-        <span>User</span>
-        <span>Email</span>
-        <span>Role</span>
-        <span>Last Login</span>
-        <span>Status</span>
-        <span>Actions</span>
+  <!-- Controls Section -->
+  <div class="controls-section">
+    <div class="search-filters">
+      <div class="search-box">
+        <Input
+          placeholder="Search by name or email..."
+          bind:value={searchTerm}
+        />
       </div>
 
-      {#if loading}
-        <div class="loading-row">
-          <span>Loading users...</span>
-        </div>
-      {:else}
-        {#each users as user}
-          <div class="table-row" class:inactive={!user.is_active}>
-            <div class="user-info">
-              <div class="user-avatar">
+      <div class="filter-controls">
+        <select bind:value={filterRole} class="filter-select">
+          <option value="all">All Roles</option>
+          <option value="super_admin">Super Admin</option>
+          <option value="tournament_director">Tournament Director</option>
+          <option value="registration_manager">Registration Manager</option>
+          <option value="content_editor">Content Editor</option>
+          <option value="financial_manager">Financial Manager</option>
+        </select>
+
+        <select bind:value={filterStatus} class="filter-select">
+          <option value="all">All Status</option>
+          <option value="active">Active Only</option>
+          <option value="inactive">Inactive Only</option>
+        </select>
+
+        {#if searchTerm || filterRole !== "all" || filterStatus !== "all"}
+          <Button variant="outline" size="small" onclick={clearFilters}>
+            Clear Filters
+          </Button>
+        {/if}
+      </div>
+    </div>
+
+    {#if canManageUsers}
+      <Button variant="primary" onclick={() => (showCreateUserModal = true)}>
+        ➕ Add New User
+      </Button>
+    {/if}
+  </div>
+
+  <!-- Users Grid -->
+  <div class="users-grid">
+    {#if loading}
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading users...</p>
+      </div>
+    {:else if filteredUsers.length === 0}
+      <div class="empty-state">
+        <div class="empty-icon">👥</div>
+        <h3>No users found</h3>
+        <p>
+          {searchTerm || filterRole !== "all" || filterStatus !== "all"
+            ? "Try adjusting your search or filters"
+            : "No users have been created yet"}
+        </p>
+        {#if canManageUsers && !searchTerm && filterRole === "all" && filterStatus === "all"}
+          <Button
+            variant="primary"
+            onclick={() => (showCreateUserModal = true)}
+          >
+            Create First User
+          </Button>
+        {/if}
+      </div>
+    {:else}
+      {#each filteredUsers as user (user.id)}
+        <Card variant="default" padding="large" hoverable={true}>
+          <div class="user-card">
+            <div class="user-header">
+              <div class="user-avatar" class:inactive={!user.is_active}>
                 {user.name
                   .split(" ")
                   .map((n) => n[0])
                   .join("")
                   .toUpperCase()}
               </div>
-              <div class="user-details">
-                <strong>{user.name}</strong>
-                <span class="user-id">ID: {user.id}</span>
+              <div class="user-info">
+                <h4>{user.name}</h4>
+                <p class="user-email">{user.email}</p>
+                <div class="user-meta">
+                  <span class="role-badge role-{user.role}">
+                    {getRoleName(user.role)}
+                  </span>
+                  <span
+                    class="status-badge status-{user.is_active
+                      ? 'active'
+                      : 'inactive'}"
+                  >
+                    {user.is_active ? "Active" : "Inactive"}
+                  </span>
+                </div>
               </div>
             </div>
-            <span class="email">{user.email}</span>
-            <span class="role">
-              <span class="role-badge role-{user.role}">
-                {getRoleName(user.role)}
-              </span>
-            </span>
-            <span class="last-login">
-              {user.last_login ? formatDate(user.last_login) : "Never"}
-            </span>
-            <span class="status">
-              <span
-                class="status-badge status-{user.is_active
-                  ? 'active'
-                  : 'inactive'}"
-              >
-                {user.is_active ? "Active" : "Inactive"}
-              </span>
-            </span>
-            <div class="actions">
-              {#if canManageUsers && user.is_active}
+
+            <div class="user-details">
+              <div class="detail-row">
+                <span class="detail-label">User ID:</span>
+                <span class="detail-value">#{user.id}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Created:</span>
+                <span class="detail-value">{formatDate(user.created_at)}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Last Login:</span>
+                <span class="detail-value">
+                  {user.last_login ? formatDate(user.last_login) : "Never"}
+                </span>
+              </div>
+            </div>
+
+            {#if canManageUsers}
+              <div class="user-actions">
                 <Button
-                  variant="ghost"
-                  size="tiny"
+                  variant="outline"
+                  size="small"
                   onclick={() => openEditModal(user)}
                 >
                   ✏️ Edit
                 </Button>
-                {#if user.id !== parseInt(currentUser?.id || "0")}
+
+                {#if user.is_active}
+                  {#if user.id !== parseInt(currentUser?.id || "0")}
+                    <Button
+                      variant="outline"
+                      size="small"
+                      onclick={() => deactivateUser(user.id)}
+                    >
+                      🚫 Deactivate
+                    </Button>
+                  {/if}
+                {:else}
                   <Button
-                    variant="ghost"
-                    size="tiny"
-                    onclick={() => deactivateUser(user.id)}
+                    variant="primary"
+                    size="small"
+                    onclick={() => activateUser(user.id)}
                   >
-                    🚫 Deactivate
+                    ✅ Activate
                   </Button>
                 {/if}
-              {/if}
-            </div>
+              </div>
+            {/if}
           </div>
-        {/each}
-      {/if}
-    </div>
-  </Card>
+        </Card>
+      {/each}
+    {/if}
+  </div>
 
   <!-- Create User Modal -->
   {#if showCreateUserModal}
@@ -442,23 +586,49 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    padding: 1.5rem;
   }
 
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 2rem;
+  .management-header {
+    margin-bottom: 1rem;
   }
 
-  .header-content h2 {
+  .header-info h2 {
     margin: 0 0 0.5rem 0;
     color: var(--text-dark);
   }
 
-  .header-content p {
+  .header-info p {
     margin: 0;
     color: var(--medium-gray);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    background: var(--light-gray);
+    border-radius: var(--border-radius);
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-green);
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--medium-gray);
+    text-transform: uppercase;
   }
 
   .error-message {
@@ -480,84 +650,141 @@
     padding: 0.25rem;
   }
 
-  /* Table Styles */
-  .users-table {
-    overflow-x: auto;
+  .controls-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    flex-wrap: wrap;
   }
 
-  .table-header {
-    display: grid;
-    grid-template-columns: 2fr 2fr 1.5fr 1.5fr 1fr 1.5fr;
+  .search-filters {
+    display: flex;
     gap: 1rem;
-    padding: 1.5rem;
-    background: var(--primary-green);
-    color: var(--white);
-    font-weight: 600;
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
-  }
-
-  .table-row {
-    display: grid;
-    grid-template-columns: 2fr 2fr 1.5fr 1.5fr 1fr 1.5fr;
-    gap: 1rem;
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--light-gray);
     align-items: center;
-    transition: background-color 0.2s ease;
+    flex: 1;
+    flex-wrap: wrap;
   }
 
-  .table-row:hover {
-    background: var(--light-gray);
+  .search-box {
+    flex: 1;
+    min-width: 300px;
   }
 
-  .table-row.inactive {
-    opacity: 0.6;
-    background: #f8f9fa;
+  .filter-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
   }
 
-  .loading-row {
-    padding: 2rem;
+  .filter-select {
+    padding: 0.5rem;
+    border: 1px solid var(--light-gray);
+    border-radius: var(--border-radius);
+    background: var(--white);
+  }
+
+  .users-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .loading-state,
+  .empty-state {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
     text-align: center;
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--light-gray);
+    border-top: 4px solid var(--primary-green);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-dark);
+  }
+
+  .empty-state p {
+    margin: 0 0 1.5rem 0;
     color: var(--medium-gray);
   }
 
-  .user-info {
+  .user-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .user-header {
     display: flex;
     align-items: center;
     gap: 1rem;
   }
 
   .user-avatar {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background: var(--primary-green);
     color: var(--white);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 1.2rem;
+    font-weight: 700;
+    flex-shrink: 0;
   }
 
-  .user-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+  .user-avatar.inactive {
+    background: var(--medium-gray);
   }
 
-  .user-details strong {
+  .user-info {
+    flex: 1;
+  }
+
+  .user-info h4 {
+    margin: 0 0 0.25rem 0;
     color: var(--text-dark);
+    font-size: 1.1rem;
   }
 
-  .user-id {
-    font-size: 0.75rem;
+  .user-email {
+    margin: 0 0 0.75rem 0;
     color: var(--medium-gray);
+    font-size: 0.9rem;
   }
 
-  .email {
-    color: var(--dark-gray);
-    word-break: break-word;
+  .user-meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
   .role-badge {
@@ -594,11 +821,6 @@
     color: var(--white);
   }
 
-  .role-volunteer_coordinator {
-    background: #fd7e14;
-    color: var(--white);
-  }
-
   .status-badge {
     display: inline-block;
     padding: 0.25rem 0.5rem;
@@ -618,10 +840,38 @@
     color: #721c24;
   }
 
-  .actions {
+  .user-details {
     display: flex;
+    flex-direction: column;
     gap: 0.5rem;
-    flex-wrap: wrap;
+    padding: 1rem;
+    background: var(--light-gray);
+    border-radius: var(--border-radius);
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .detail-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+  }
+
+  .detail-value {
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+  }
+
+  .user-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid var(--light-gray);
   }
 
   /* Modal Styles */
@@ -642,7 +892,7 @@
   .modal-content {
     background: var(--white);
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow-large);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 500px;
     max-height: 90vh;
@@ -714,84 +964,39 @@
 
   /* Mobile Responsiveness */
   @media (max-width: 768px) {
-    .section-header {
+    .user-management {
+      padding: 1rem;
+    }
+
+    .controls-section {
       flex-direction: column;
-      gap: 1rem;
       align-items: stretch;
     }
 
-    .table-header {
-      display: none;
+    .search-filters {
+      flex-direction: column;
+      gap: 1rem;
     }
 
-    .table-row {
-      display: block;
-      padding: 1.5rem;
-      border: 1px solid var(--light-gray);
-      border-radius: var(--border-radius);
-      margin-bottom: 1rem;
+    .search-box {
+      min-width: auto;
     }
 
-    .table-row > * {
-      display: block;
-      margin: 0.5rem 0;
+    .users-grid {
+      grid-template-columns: 1fr;
     }
 
-    .user-info {
-      margin-bottom: 1rem;
+    .user-header {
+      flex-direction: column;
+      text-align: center;
+      gap: 1rem;
     }
 
-    .email::before {
-      content: "Email: ";
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-
-    .role::before {
-      content: "Role: ";
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-
-    .last-login::before {
-      content: "Last Login: ";
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-
-    .status::before {
-      content: "Status: ";
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-
-    .actions {
-      justify-content: flex-start;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--light-gray);
+    .user-actions {
+      flex-direction: column;
     }
 
     .modal-actions {
-      flex-direction: column;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .modal-content {
-      margin: 0;
-      border-radius: 0;
-      height: 100vh;
-      max-height: none;
-    }
-
-    .user-avatar {
-      width: 35px;
-      height: 35px;
-      font-size: 0.75rem;
-    }
-
-    .actions {
       flex-direction: column;
     }
   }
