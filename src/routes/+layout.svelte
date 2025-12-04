@@ -48,33 +48,31 @@
       </a>
     </div>
 
-    <!-- Menu + Toggle -->
-    <div class="nav-right">
-      <ul class="nav-menu" class:nav-menu-active={mobileMenuOpen}>
-        {#if isAdmin}
-          <li>
-            <a
-              href="/admin/dashboard?tab=management"
-              class="nav-link"
-              class:active={$page.url.pathname === "/admin/dashboard" &&
-                $page.url.searchParams.get("tab") === "management"}
-              on:click={() => (mobileMenuOpen = false)}>Management Portal</a
-            >
-          </li>
-          <li>
-            <button
-              class="nav-link admin-logout-btn"
-              on:click={() => {
-                import('$lib/stores/auth').then(({ authActions }) => {
-                  authActions.logout();
-                  window.location.href = '/';
-                });
-                mobileMenuOpen = false;
-              }}
-              >Logout</button
-            >
-          </li>
-        {:else}
+    {#if isAdmin && !($page.url.searchParams.get("preview") === "true")}
+      <!-- Admin Navigation - Management Portal and Logout on same row -->
+      <div class="admin-nav-section">
+        <a
+          href="/admin/dashboard?tab=management"
+          class="nav-link management-link"
+          class:active={$page.url.pathname === "/admin/dashboard" &&
+            $page.url.searchParams.get("tab") === "management"}
+          >Management Portal</a
+        >
+        <button
+          class="nav-link admin-logout-btn"
+          on:click={() => {
+            import('$lib/stores/auth').then(({ authActions }) => {
+              authActions.logout();
+              window.location.href = '/';
+            });
+          }}
+          >Logout</button
+        >
+      </div>
+    {:else}
+      <!-- Public Menu + Toggle -->
+      <div class="nav-right">
+        <ul class="nav-menu" class:nav-menu-active={mobileMenuOpen}>
           <li>
             <a
               href="/register"
@@ -123,21 +121,21 @@
               on:click={() => (mobileMenuOpen = false)}>Contact</a
             >
           </li>
-        {/if}
-      </ul>
+        </ul>
 
-      <!-- Hamburger Toggle -->
-      <button
-        class="nav-toggle"
-        aria-label="Toggle menu"
-        aria-expanded={mobileMenuOpen}
-        on:click={toggleMobileMenu}
-      >
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
-      </button>
-    </div>
+        <!-- Hamburger Toggle -->
+        <button
+          class="nav-toggle"
+          aria-label="Toggle menu"
+          aria-expanded={mobileMenuOpen}
+          on:click={toggleMobileMenu}
+        >
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    {/if}
   </div>
 </nav>
 
@@ -292,6 +290,23 @@
   .admin-logout-btn:hover {
     background: linear-gradient(135deg, #c82333, #a71e2a);
     transform: translateY(-1px);
+  }
+
+  .admin-nav-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .management-link {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .management-link:hover,
+  .management-link.active {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
   }
 
   .nav-toggle {
@@ -488,9 +503,32 @@
     }
   }
 
+  @media (max-width: 768px) {
+    .admin-nav-section {
+      gap: 0.5rem;
+    }
+
+    .management-link,
+    .admin-logout-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
+
   @media (max-width: 480px) {
     .nav-logo h2 {
       font-size: 1rem;
+    }
+
+    .admin-nav-section {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .management-link,
+    .admin-logout-btn {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
     }
   }
 </style>

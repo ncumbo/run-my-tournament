@@ -11,8 +11,19 @@
   import { auth, authActions } from "$lib/stores/auth";
   import { permissionChecker, roleActions } from "$lib/stores/permissions";
 
+  // ===========================
+  // STATE MANAGEMENT
+  // ===========================
+
   // Tab management
   let activeTab = "preview";
+  let websitePreviewTab = "home"; // Default tab for website preview
+  let selectedManagementSection = "users";
+  let hasInitialized = false;
+
+  // ===========================
+  // COMPUTED VALUES
+  // ===========================
 
   // Authentication state
   $: isAuthenticated = $auth.isAuthenticated;
@@ -21,28 +32,18 @@
     ? $permissionChecker.hasPermission(parseInt(user.id), "users.manage")
     : false;
 
-  let hasInitialized = false;
+  // Filter available management sections by permissions
+  $: availableSections = managementSections.filter((section) =>
+    user
+      ? $permissionChecker.hasPermission(parseInt(user.id), section.permission)
+      : false
+  );
 
-  // Redirect if not authenticated
-  $: if (
-    hasInitialized &&
-    typeof window !== "undefined" &&
-    !$auth.isLoading &&
-    !isAuthenticated
-  ) {
-    goto("/admin/login");
-  }
+  // ===========================
+  // DATA CONFIGURATION
+  // ===========================
 
-  onMount(() => {
-    // Initialize role system
-    roleActions.initializeDefaultRoles();
-
-    setTimeout(() => {
-      hasInitialized = true;
-    }, 100);
-  });
-
-  // Mock data for preview
+  // Mock data for preview dashboard
   const tournamentStats = [
     {
       number: "52",
@@ -101,6 +102,7 @@
     },
   ];
 
+  // Management sections configuration
   const managementSections = [
     {
       id: "users",
@@ -140,13 +142,70 @@
     },
   ];
 
-  $: availableSections = managementSections.filter((section) =>
-    user
-      ? $permissionChecker.hasPermission(parseInt(user.id), section.permission)
-      : false
-  );
+  // Website preview tabs configuration
+  const websiteTabs = [
+    { id: "home", label: "Home", href: "/?preview=true" },
+    { id: "register", label: "Register", href: "/register?preview=true" },
+    {
+      id: "tournament-details",
+      label: "Tournament Details",
+      href: "/tournament-details?preview=true",
+    },
+    { id: "about", label: "About", href: "/about?preview=true" },
+    {
+      id: "sponsorship",
+      label: "Sponsorship",
+      href: "/sponsorship?preview=true",
+    },
+    {
+      id: "leaderboard",
+      label: "Leaderboard",
+      href: "/leaderboard?preview=true",
+    },
+    { id: "contact", label: "Contact", href: "/contact?preview=true" },
+    { id: "volunteer", label: "Volunteer", href: "/volunteer?preview=true" },
+    { id: "history", label: "History", href: "/history?preview=true" },
+  ];
 
-  let selectedManagementSection = "users";
+  // ===========================
+  // EVENT HANDLERS
+  // ===========================
+
+  function switchToManagement(section) {
+    activeTab = "management";
+    selectedManagementSection = section;
+  }
+
+  function switchToWebsitePreview() {
+    activeTab = "website";
+  }
+
+  function switchToPreview() {
+    activeTab = "preview";
+  }
+
+  // ===========================
+  // LIFECYCLE & EFFECTS
+  // ===========================
+
+  // Redirect if not authenticated
+  $: if (
+    hasInitialized &&
+    typeof window !== "undefined" &&
+    !$auth.isLoading &&
+    !isAuthenticated
+  ) {
+    goto("/admin/login");
+  }
+
+  onMount(() => {
+    // Initialize role system
+    roleActions.initializeDefaultRoles();
+
+    setTimeout(() => {
+      hasInitialized = true;
+    }, 100);
+  });
 </script>
 
 <svelte:head>
@@ -156,7 +215,9 @@
 
 {#if isAuthenticated}
   <div class="admin-dashboard">
-    <!-- Header with user info -->
+    <!-- ===========================
+         HEADER SECTION
+         =========================== -->
     <header class="dashboard-header">
       <div class="header-content">
         <div class="header-info">
@@ -167,22 +228,26 @@
           </p>
         </div>
         <div class="header-actions">
-          <Button
-            variant="outline"
-            size="small"
-            onclick={() => window.open("/", "_blank")}
-          >
-            🌐 View Website
-          </Button>
+          {#if activeTab !== "website"}
+            <Button
+              variant="outline"
+              size="small"
+              onclick={switchToWebsitePreview}
+            >
+              🌐 View Website
+            </Button>
+          {/if}
         </div>
       </div>
     </header>
 
-    <!-- Tab Content -->
+    <!-- ===========================
+         MAIN CONTENT AREA
+         =========================== -->
     <main class="tab-content">
+      <!-- DASHBOARD OVERVIEW TAB -->
       {#if activeTab === "preview"}
         <div class="preview-tab">
-          <!-- Tournament Overview -->
           <section class="overview-section">
             <div class="section-header">
               <h2>🏆 Tournament Overview</h2>
@@ -206,34 +271,26 @@
                 </Card>
               {/each}
             </div>
+
             <!-- Quick Actions -->
             <Card variant="default" padding="large">
               <h3>⚡ Quick Actions</h3>
               <div class="quick-actions">
                 <Button
                   variant="primary"
-                  onclick={() => {
-                    activeTab = "management";
-                    selectedManagementSection = "registrations";
-                  }}
+                  onclick={() => switchToManagement("registrations")}
                 >
                   ➕ Add Registration
                 </Button>
                 <Button
                   variant="outline"
-                  onclick={() => {
-                    activeTab = "management";
-                    selectedManagementSection = "financial";
-                  }}
+                  onclick={() => switchToManagement("financial")}
                 >
                   💰 View Payments
                 </Button>
                 <Button
                   variant="outline"
-                  onclick={() => {
-                    activeTab = "management";
-                    selectedManagementSection = "analytics";
-                  }}
+                  onclick={() => switchToManagement("analytics")}
                 >
                   📊 Export Data
                 </Button>
@@ -245,7 +302,9 @@
                 </Button>
               </div>
             </Card>
+
             <br />
+
             <!-- Recent Activity Feed -->
             <Card variant="default" padding="large">
               <div class="activity-header">
@@ -266,12 +325,25 @@
             </Card>
           </section>
         </div>
+
+        <!-- MANAGEMENT TAB -->
       {:else if activeTab === "management"}
         <div class="management-tab">
           <div class="management-layout">
-            <!-- Management Navigation -->
+            <!-- Management Navigation Sidebar -->
             <aside class="management-nav">
-              <h3>Management Portal</h3>
+              <div class="management-header">
+                <Button
+                  variant="outline"
+                  size="small"
+                  onclick={switchToPreview}
+                  class="back-to-overview-btn"
+                >
+                  ← Back to the portal overview
+                </Button>
+                <h3>Management Portal</h3>
+              </div>
+
               <nav class="nav-list">
                 {#each availableSections as section}
                   <button
@@ -286,7 +358,7 @@
               </nav>
             </aside>
 
-            <!-- Management Content -->
+            <!-- Management Content Area -->
             <section class="management-content">
               {#if selectedManagementSection === "users"}
                 <UserManagement />
@@ -356,6 +428,46 @@
             </section>
           </div>
         </div>
+
+        <!-- WEBSITE PREVIEW TAB -->
+      {:else if activeTab === "website"}
+        <div class="website-preview-tab">
+          <!-- Website Preview Header -->
+          <div class="website-preview-header">
+            <Button
+              variant="outline"
+              size="small"
+              onclick={switchToPreview}
+              class="back-to-admin-btn"
+            >
+              ← Back to Admin Dashboard
+            </Button>
+            <h2>🌐 Website Preview</h2>
+          </div>
+
+          <!-- Website Navigation Tabs -->
+          <div class="website-nav-tabs">
+            {#each websiteTabs as tab}
+              <button
+                class="website-nav-tab"
+                class:active={websitePreviewTab === tab.id}
+                on:click={() => (websitePreviewTab = tab.id)}
+              >
+                {tab.label}
+              </button>
+            {/each}
+          </div>
+
+          <!-- Website Content Frame -->
+          <div class="website-content-frame">
+            <iframe
+              src={websiteTabs.find((tab) => tab.id === websitePreviewTab)
+                ?.href || "/?preview=true"}
+              title="Website Preview"
+              class="website-iframe"
+            ></iframe>
+          </div>
+        </div>
       {/if}
     </main>
   </div>
@@ -373,6 +485,9 @@
 {/if}
 
 <style>
+  /* ===========================
+     LAYOUT & GENERAL STYLES
+     =========================== */
   .admin-dashboard {
     min-height: 100vh;
     background: var(--light-gray, #f8f9fa);
@@ -380,7 +495,9 @@
     flex-direction: column;
   }
 
-  /* Header Styles */
+  /* ===========================
+     HEADER STYLES
+     =========================== */
   .dashboard-header {
     background: var(--white);
     border-bottom: 2px solid var(--light-gray);
@@ -414,17 +531,9 @@
     text-transform: capitalize;
   }
 
-  /* Tab Navigation */
-  .tab-navigation-container {
-    background: var(--white);
-    border-bottom: 1px solid var(--light-gray);
-    padding: 0 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  /* Tab Content */
+  /* ===========================
+     TAB CONTENT STYLES
+     =========================== */
   .tab-content {
     flex: 1;
     max-width: 1200px;
@@ -433,7 +542,9 @@
     width: 100%;
   }
 
-  /* Preview Tab Styles */
+  /* ===========================
+     DASHBOARD OVERVIEW STYLES
+     =========================== */
   .section-header {
     margin-bottom: 2rem;
   }
@@ -500,7 +611,12 @@
     color: var(--medium-gray);
   }
 
-  /* Activity Feed */
+  .quick-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
   .activity-header {
     display: flex;
     justify-content: space-between;
@@ -554,14 +670,9 @@
     color: var(--medium-gray);
   }
 
-  /* Quick Actions */
-  .quick-actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  /* Management Tab Styles */
+  /* ===========================
+     MANAGEMENT STYLES
+     =========================== */
   .management-layout {
     display: grid;
     grid-template-columns: 280px 1fr;
@@ -577,10 +688,20 @@
     box-shadow: var(--shadow);
   }
 
-  .management-nav h3 {
-    margin: 0 0 1.5rem 0;
+  .management-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .management-header h3 {
+    margin: 1rem 0 0 0;
     color: var(--text-dark);
     font-size: 1.25rem;
+  }
+
+  :global(.back-to-overview-btn) {
+    width: 100%;
+    justify-content: flex-start;
+    margin-bottom: 0.5rem;
   }
 
   .nav-list {
@@ -632,7 +753,6 @@
     min-height: 600px;
   }
 
-  /* Placeholder Content */
   .placeholder-content {
     text-align: center;
     padding: 3rem 2rem;
@@ -664,16 +784,97 @@
     font-weight: 500;
   }
 
-  /* Mobile Responsiveness */
+  /* ===========================
+     WEBSITE PREVIEW STYLES
+     =========================== */
+  .website-preview-tab {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 200px);
+  }
+
+  .website-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--light-gray);
+  }
+
+  .website-preview-header h2 {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 1.5rem;
+  }
+
+  :global(.back-to-admin-btn) {
+    background: var(--primary-green) !important;
+    color: var(--white) !important;
+    border-color: var(--primary-green) !important;
+  }
+
+  :global(.back-to-admin-btn:hover) {
+    background: var(--light-green) !important;
+    border-color: var(--light-green) !important;
+  }
+
+  .website-nav-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--light-gray);
+  }
+
+  .website-nav-tab {
+    padding: 0.75rem 1.25rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--medium-gray);
+    transition: var(--transition);
+    white-space: nowrap;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+  }
+
+  .website-nav-tab:hover {
+    background: var(--light-gray);
+    color: var(--text-dark);
+  }
+
+  .website-nav-tab.active {
+    color: var(--primary-green);
+    border-bottom-color: var(--primary-green);
+    background: var(--white);
+  }
+
+  .website-content-frame {
+    flex: 1;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .website-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  /* ===========================
+     RESPONSIVE STYLES
+     =========================== */
   @media (max-width: 768px) {
     .header-content {
       flex-direction: column;
       gap: 1rem;
       text-align: center;
-      padding: 0 1rem;
-    }
-
-    .tab-navigation-container {
       padding: 0 1rem;
     }
 
@@ -724,6 +925,21 @@
       flex-direction: column;
       text-align: center;
       gap: 0.75rem;
+    }
+
+    .website-preview-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .website-nav-tabs {
+      padding: 0;
+    }
+
+    .website-nav-tab {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
     }
   }
 
