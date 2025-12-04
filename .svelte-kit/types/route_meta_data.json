@@ -1,0 +1,23 @@
+{
+	"/": [],
+	"/about": [],
+	"/admin/dashboard": [],
+	"/admin/login": [],
+	"/admin/register": [],
+	"/api/admin/login": [
+		"src/routes/api/admin/login/+server.ts"
+	],
+	"/api/admin/register": [
+		"src/routes/api/admin/register/+server.ts"
+	],
+	"/api/tournament": [
+		"src/routes/api/tournament/+server.ts"
+	],
+	"/contact": [],
+	"/history": [],
+	"/leaderboard": [],
+	"/register": [],
+	"/sponsorship": [],
+	"/tournament-details": [],
+	"/volunteer": []
+}
