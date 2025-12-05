@@ -10,14 +10,54 @@
 	"/api/admin/register": [
 		"src/routes/api/admin/register/+server.ts"
 	],
+	"/api/customer/login": [
+		"src/routes/api/customer/login/+server.ts"
+	],
+	"/api/customer/me": [
+		"src/routes/api/customer/me/+server.ts"
+	],
+	"/api/customer/signup": [
+		"src/routes/api/customer/signup/+server.ts"
+	],
+	"/api/organization/customization": [
+		"src/routes/api/organization/customization/+server.ts"
+	],
+	"/api/organization/domain": [
+		"src/routes/api/organization/domain/+server.ts"
+	],
+	"/api/organization/domain/verify": [
+		"src/routes/api/organization/domain/verify/+server.ts"
+	],
+	"/api/payments/stripe/connect": [
+		"src/routes/api/payments/stripe/connect/+server.ts"
+	],
 	"/api/tournament": [
 		"src/routes/api/tournament/+server.ts"
 	],
+	"/api/v1": [
+		"src/routes/api/v1/+layout.server.ts"
+	],
+	"/api/v1/tournaments": [
+		"src/routes/api/v1/tournaments/+server.ts"
+	],
 	"/contact": [],
+	"/dashboard": [],
+	"/dashboard/analytics": [],
+	"/dashboard/customization": [],
+	"/dashboard/domains": [],
+	"/dashboard/payments": [],
+	"/dashboard/tournaments": [],
+	"/dashboard/tournaments/create": [],
 	"/history": [],
 	"/leaderboard": [],
+	"/login": [],
 	"/register": [],
+	"/signup": [],
 	"/sponsorship": [],
 	"/tournament-details": [],
-	"/volunteer": []
+	"/volunteer": [],
+	"/[subdomain]": [
+		"src/routes/[subdomain]/+layout.server.ts",
+		"src/routes/[subdomain]/+layout.server.ts"
+	]
 }

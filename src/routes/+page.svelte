@@ -1,501 +1,888 @@
 <script lang="ts">
-  import { PageHero, CountdownTimer, Card, Button } from "$lib/components";
+  import { Card, Button } from "$lib/components";
 
-  // Tournament date: June 12, 2026 at 12:00 PM EST
-  const tournamentDate = new Date("2026-06-12T12:00:00-05:00");
+  // Demo viewer state
+  let activeTab = "home";
+  let showSignupModal = false;
+
+  // Mock data for demo
+  const demoTournament = {
+    name: "Sample Charity Golf Tournament",
+    date: "June 15, 2025",
+    charity: "Local Children's Hospital",
+    location: "Pine Valley Golf Club",
+    individualPrice: 125,
+    teamPrice: 450,
+  };
+
+  const platformFeatures = [
+    {
+      icon: "🎯",
+      title: "Easy Tournament Setup",
+      description:
+        "Create professional tournament sites in minutes with our intuitive wizard",
+    },
+    {
+      icon: "💰",
+      title: "Integrated Payments",
+      description:
+        "Secure registration and payment processing with automatic confirmation",
+    },
+    {
+      icon: "📊",
+      title: "Real-time Analytics",
+      description:
+        "Track registrations, revenue, and participant engagement in real-time",
+    },
+    {
+      icon: "🎨",
+      title: "Custom Branding",
+      description:
+        "Personalize your tournament site with logos, colors, and custom content",
+    },
+  ];
+
+  const testimonials = [
+    {
+      name: "Sarah Johnson",
+      role: "Tournament Director",
+      quote:
+        "Pinpoint Golf made organizing our charity tournament effortless. We raised 40% more than last year!",
+    },
+    {
+      name: "Mike Chen",
+      role: "Golf Coordinator",
+      quote:
+        "The registration process was so smooth. Participants loved the professional look and feel.",
+    },
+  ];
+
+  function scrollToDemo() {
+    document
+      .querySelector(".demo-section")
+      ?.scrollIntoView({ behavior: "smooth" });
+  }
 </script>
 
 <svelte:head>
-  <title>IBM Charity Golf Tournament 2026</title>
+  <title
+    >Pinpoint Golf - Create Professional Golf Tournament Websites for Free</title
+  >
   <meta
     name="description"
-    content="Join the annual IBM Charity Golf Tournament on June 12, 2026. Supporting CHARITY TBD with golf, giving, and community spirit."
+    content="Build beautiful, professional golf tournament websites in minutes. Free platform with integrated registration, payments, and analytics."
   />
 </svelte:head>
 
 <!-- Hero Section -->
-<PageHero
-  title="IBM Charity Golf Tournament"
-  subtitle="Supporting CHARITY TBD & Making a Difference"
-  variant="home"
->
-  <svelte:fragment slot="content">
-    <CountdownTimer targetDate={tournamentDate} title="Tournament Countdown" />
-  </svelte:fragment>
-  <svelte:fragment slot="actions">
-    <Button href="/register" variant="primary" size="large">Register Now</Button
-    >
-    <Button href="/sponsorship" variant="secondary" size="large"
-      >Become a Sponsor</Button
-    >
-  </svelte:fragment>
-</PageHero>
-
-<!-- Quick Info Section -->
-<section class="quick-info section">
+<section class="hero">
   <div class="container">
-    <h2>Tournament Information</h2>
-    <div class="info-grid">
-      <Card variant="info" hoverable={true}>
-        <div class="card-icon">📅</div>
-        <h3>Date & Time</h3>
-        <p>June 12, 2026</p>
-        <p>8:00 AM Shotgun Start</p>
-      </Card>
-
-      <Card variant="info" hoverable={true}>
-        <div class="card-icon">🏌️</div>
-        <h3>Format</h3>
-        <p>18-Hole Scramble</p>
-        <p>All skill levels welcome</p>
-      </Card>
-
-      <Card variant="info" hoverable={true}>
-        <div class="card-icon">❤️</div>
-        <h3>Supporting</h3>
-        <p>CHARITY TBD</p>
-        <p>Making a difference together</p>
-      </Card>
-
-      <Card variant="info" hoverable={true}>
-        <div class="card-icon">🏆</div>
-        <h3>Registration</h3>
-        <p>Individual: $150</p>
-        <p>Foursome: $550</p>
-      </Card>
-    </div>
-  </div>
-</section>
-
-<!-- About Preview Section -->
-<section class="about-preview section">
-  <div class="container">
-    <div class="about-content">
-      <div class="about-text">
-        <h2>About Our Tournament</h2>
-        <p class="lead-text">
-          What began as a heartfelt initiative to support CHARITY TBD has grown
-          into an annual tradition that brings together IBM employees, partners,
-          and the community for a day of golf and giving back.
-        </p>
-        <p>
-          Join us for competitive golf, networking opportunities, and the chance
-          to make a real difference in our community. Whether you're a seasoned
-          golfer or just starting out, our tournament welcomes players of all
-          skill levels.
-        </p>
-
-        <div class="features-list">
-          <div class="feature-item">
-            <span class="feature-icon">⛳</span>
-            <span>Professional golf course setting</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">🍽️</span>
-            <span>Awards ceremony dinner</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">🎁</span>
-            <span>Silent auction & prizes</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">🤝</span>
-            <span>Networking opportunities</span>
-          </div>
-        </div>
-
-        <Button href="/about" variant="outline"
-          >Learn More About Our Mission</Button
-        >
-      </div>
-      <div class="about-image">
-        <div class="image-placeholder">
-          <div class="placeholder-content">
-            <h4>Tournament Highlights</h4>
-            <p>Photos from previous tournaments</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Sponsorship CTA -->
-<section class="sponsorship-cta section">
-  <div class="container">
-    <div class="cta-content">
-      <h2>Partner With Us</h2>
-      <p class="cta-text">
-        Join leading companies in supporting our community while gaining
-        valuable brand visibility. Our sponsorship packages offer excellent
-        opportunities to connect with professionals and make a lasting impact.
+    <div class="hero-content">
+      <h1>Create Professional Golf Tournament Websites - Completely Free</h1>
+      <p class="hero-subtitle">
+        Build stunning tournament sites in minutes with integrated registration,
+        payments, and analytics. Perfect for charity tournaments, corporate
+        events, and golf leagues.
       </p>
-      <div class="cta-highlights">
-        <div class="highlight-item">
-          <strong>Corporate Foursome</strong>
-          <span>$2,500 - Includes 4 players + 3 hole sponsorships</span>
+      <div class="hero-actions">
+        <Button
+          variant="primary"
+          size="large"
+          onclick={() => (showSignupModal = true)}
+        >
+          🚀 Create Free Tournament Site
+        </Button>
+        <Button variant="secondary" size="large" onclick={scrollToDemo}>
+          👁️ View Live Demo
+        </Button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <strong>500+</strong>
+          <span>Tournaments Created</span>
         </div>
-        <div class="highlight-item">
-          <strong>Hole Sponsorship</strong>
-          <span>$500 - Tee box signage and recognition</span>
+        <div class="stat">
+          <strong>25,000+</strong>
+          <span>Players Registered</span>
         </div>
-        <div class="highlight-item">
-          <strong>Premium Packages</strong>
-          <span>$5,000+ - Maximum visibility and perks</span>
+        <div class="stat">
+          <strong>$2M+</strong>
+          <span>Raised for Charity</span>
         </div>
       </div>
-      <Button href="/sponsorship" variant="primary" size="large">
-        View Sponsorship Packages
-      </Button>
     </div>
   </div>
 </section>
+
+<!-- Features Section -->
+<section class="features">
+  <div class="container">
+    <h2>Everything You Need for Successful Tournaments</h2>
+    <div class="features-grid">
+      {#each platformFeatures as feature}
+        <Card variant="default" padding="large" hoverable={true}>
+          <div class="feature-card">
+            <div class="feature-icon">{feature.icon}</div>
+            <h3>{feature.title}</h3>
+            <p>{feature.description}</p>
+          </div>
+        </Card>
+      {/each}
+    </div>
+  </div>
+</section>
+
+<!-- Demo Section -->
+<section class="demo-section">
+  <div class="container">
+    <h2>See What Your Tournament Site Will Look Like</h2>
+    <p class="demo-subtitle">
+      Explore a live example of a tournament website created with Pinpoint Golf
+    </p>
+
+    <!-- Demo Tabs -->
+    <div class="demo-tabs">
+      <button
+        class="demo-tab"
+        class:active={activeTab === "home"}
+        on:click={() => (activeTab = "home")}
+      >
+        🏠 Home
+      </button>
+      <button
+        class="demo-tab"
+        class:active={activeTab === "registration"}
+        on:click={() => (activeTab = "registration")}
+      >
+        📝 Registration
+      </button>
+      <button
+        class="demo-tab"
+        class:active={activeTab === "about"}
+        on:click={() => (activeTab = "about")}
+      >
+        ℹ️ About
+      </button>
+    </div>
+
+    <!-- Demo Content -->
+    <div class="demo-viewer">
+      {#if activeTab === "home"}
+        <div class="demo-content">
+          <div class="demo-hero">
+            <h1>{demoTournament.name}</h1>
+            <p>Supporting {demoTournament.charity} • {demoTournament.date}</p>
+            <div class="demo-cta">
+              <Button variant="primary"
+                >Register Now - ${demoTournament.individualPrice}</Button
+              >
+              <Button variant="secondary">Learn More</Button>
+            </div>
+          </div>
+          <div class="demo-sections">
+            <div class="demo-section-item">
+              <h3>📅 Event Details</h3>
+              <p>June 15, 2025 at {demoTournament.location}</p>
+            </div>
+            <div class="demo-section-item">
+              <h3>💝 Our Cause</h3>
+              <p>Supporting {demoTournament.charity} with 100% of proceeds</p>
+            </div>
+            <div class="demo-section-item">
+              <h3>🏆 Tournament Format</h3>
+              <p>18-hole scramble with prizes and dinner</p>
+            </div>
+          </div>
+        </div>
+      {:else if activeTab === "registration"}
+        <div class="demo-content">
+          <h2>Registration Options</h2>
+          <div class="demo-pricing">
+            <div class="price-card">
+              <h3>Individual Player</h3>
+              <div class="price">${demoTournament.individualPrice}</div>
+              <ul>
+                <li>18 holes of golf</li>
+                <li>Cart and lunch included</li>
+                <li>Awards ceremony dinner</li>
+              </ul>
+              <Button variant="primary">Register Individual</Button>
+            </div>
+            <div class="price-card">
+              <h3>Team (4 Players)</h3>
+              <div class="price">${demoTournament.teamPrice}</div>
+              <ul>
+                <li>Reserved foursome</li>
+                <li>Team photo opportunity</li>
+                <li>Group coordination</li>
+              </ul>
+              <Button variant="primary">Register Team</Button>
+            </div>
+          </div>
+          <div class="demo-help">
+            <h4>Need Help?</h4>
+            <p>Contact our tournament coordinator at tournament@example.org</p>
+          </div>
+        </div>
+      {:else if activeTab === "about"}
+        <div class="demo-content">
+          <h2>About Our Tournament</h2>
+          <div class="demo-about">
+            <div class="about-section">
+              <h3>Our Mission</h3>
+              <p>
+                What started as a small group of golf enthusiasts wanting to
+                make a difference has grown into an annual tradition supporting {demoTournament.charity}.
+                Every dollar raised goes directly to helping children in our
+                community.
+              </p>
+            </div>
+            <div class="about-section">
+              <h3>Tournament History</h3>
+              <p>
+                Now in its 5th year, our tournament has raised over $75,000 for
+                local charities and brought together more than 200 golfers who
+                share our passion for giving back.
+              </p>
+            </div>
+            <div class="about-gallery">
+              <h3>Photo Gallery</h3>
+              <div class="gallery-grid">
+                <div class="gallery-item">📸 Tournament highlights</div>
+                <div class="gallery-item">🏆 Awards ceremony</div>
+                <div class="gallery-item">🤝 Community impact</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {/if}
+    </div>
+
+    <div class="demo-footer">
+      <p>
+        <strong>Quick Links:</strong> About • Registration • Contact • History
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials">
+  <div class="container">
+    <h2>Trusted by Tournament Organizers</h2>
+    <div class="testimonials-grid">
+      {#each testimonials as testimonial}
+        <Card variant="default" padding="large">
+          <div class="testimonial">
+            <p>"{testimonial.quote}"</p>
+            <div class="testimonial-author">
+              <strong>{testimonial.name}</strong>
+              <span>{testimonial.role}</span>
+            </div>
+          </div>
+        </Card>
+      {/each}
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <Card variant="elevated" padding="large">
+      <div class="cta-content">
+        <h2>Ready to Create Your Tournament Site?</h2>
+        <p>
+          Join hundreds of tournament organizers who trust Pinpoint Golf for
+          their events.
+        </p>
+        <Button
+          variant="primary"
+          size="large"
+          onclick={() => (showSignupModal = true)}
+        >
+          Start Building - It's Free!
+        </Button>
+      </div>
+    </Card>
+  </div>
+</section>
+
+<!-- Signup Modal -->
+{#if showSignupModal}
+  <div
+    class="modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="signup-modal-title"
+    tabindex="-1"
+    on:click={() => (showSignupModal = false)}
+    on:keydown={(e) => e.key === "Escape" && (showSignupModal = false)}
+  >
+    <div class="modal-content" role="document">
+      <button class="close-btn" on:click={() => (showSignupModal = false)}
+        >✕</button
+      >
+      <div class="signup-form">
+        <h2 id="signup-modal-title">Create Your Free Tournament Site</h2>
+        <p>Get started in less than 2 minutes</p>
+
+        <div class="signup-benefits">
+          <div class="benefit">✅ Free forever</div>
+          <div class="benefit">✅ Professional design</div>
+          <div class="benefit">✅ Payment processing</div>
+        </div>
+
+        <div class="modal-actions">
+          <Button
+            variant="primary"
+            size="large"
+            onclick={() => {
+              showSignupModal = false;
+              window.location.href = "/signup";
+            }}
+          >
+            Sign Up Now - It's Free!
+          </Button>
+        </div>
+
+        <p class="signup-note">
+          No credit card required • Setup takes 2 minutes
+        </p>
+      </div>
+    </div>
+  </div>
+{/if}
 
 <style>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
   /* Hero Section */
   .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: var(--gradient-green);
+    color: white;
+    padding: 4rem 0;
     text-align: center;
+    position: relative;
     overflow: hidden;
   }
 
-  .hero-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      135deg,
-      var(--primary-green) 0%,
-      var(--light-green) 50%,
-      var(--accent-yellow) 100%
-    );
-    opacity: 0.95;
-  }
-
-  .hero-background::before {
+  .hero::before {
     content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-image:
-      radial-gradient(
-        circle at 20% 50%,
-        rgba(255, 255, 255, 0.1) 2px,
-        transparent 2px
-      ),
-      radial-gradient(
-        circle at 80% 50%,
-        rgba(255, 255, 255, 0.1) 1px,
-        transparent 1px
-      );
-    background-size:
-      50px 50px,
-      30px 30px;
-    animation: float 20s ease-in-out infinite;
+    background: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.1) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.1) 75%,
+      transparent 75%
+    );
+    background-size: 40px 40px;
+    opacity: 0.1;
+    animation: subtle-move 20s linear infinite;
   }
 
-  @keyframes float {
-    0%,
+  @keyframes subtle-move {
+    0% {
+      transform: translateX(0);
+    }
     100% {
-      transform: translateY(0px) translateX(0px);
-    }
-    50% {
-      transform: translateY(-20px) translateX(10px);
+      transform: translateX(40px);
     }
   }
 
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-  }
-
-  .hero-title {
-    color: var(--white);
-    font-size: clamp(3rem, 6vw, 5rem);
+  .hero-content h1 {
+    color: white;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 1.5rem;
     font-weight: 700;
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    line-height: 1.1;
   }
 
   .hero-subtitle {
-    font-size: clamp(1.2rem, 3vw, 1.6rem);
-    color: var(--white);
-    margin-bottom: 0.5rem;
-    font-weight: 400;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  }
-
-  .tournament-date {
-    margin-bottom: 3rem;
-    text-align: center;
-  }
-
-  .date-main {
-    font-size: clamp(2rem, 4vw, 2.8rem);
-    color: var(--white);
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  }
-
-  .date-details {
-    font-size: clamp(1.2rem, 3vw, 1.6rem);
-    color: var(--white);
-    font-weight: 600;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  }
-
-  /* Countdown Timer */
-  .countdown-container {
-    margin: 3rem auto;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: var(--border-radius-large);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    max-width: 600px;
-  }
-
-  .countdown-container h3 {
-    color: var(--white);
+    color: var(--accent-yellow);
+    font-size: 1.25rem;
     margin-bottom: 2rem;
-    font-size: 1.5rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    opacity: 0.95;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .countdown {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+  .hero-actions {
+    display: flex;
     gap: 1rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
   }
 
-  .time-unit {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 1.5rem 1rem;
-    border-radius: var(--border-radius);
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
     text-align: center;
-    backdrop-filter: blur(5px);
   }
 
-  .time-number {
+  .stat strong {
     display: block;
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: 2rem;
     font-weight: 700;
-    color: var(--white);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    line-height: 1;
   }
 
-  .time-label {
-    display: block;
+  .stat span {
     font-size: 0.9rem;
-    color: var(--white);
-    font-weight: 500;
-    margin-top: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    opacity: 0.9;
   }
 
-  .hero-buttons {
-    margin-top: 3rem;
+  /* Features Section */
+  .features {
+    padding: 4rem 0;
+    background: var(--light-gray);
+  }
+
+  .features h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 2.5rem;
+    color: var(--text-dark);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .feature-card {
+    text-align: center;
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card h3 {
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+  }
+
+  .feature-card p {
+    color: var(--medium-gray);
+    line-height: 1.6;
+  }
+
+  /* Demo Section */
+  .demo-section {
+    padding: 4rem 0;
+  }
+
+  .demo-section h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    color: var(--text-dark);
+  }
+
+  .demo-subtitle {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--medium-gray);
+    font-size: 1.1rem;
+  }
+
+  .demo-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .demo-tab {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--light-gray);
+    background: white;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+  }
+
+  .demo-tab:hover {
+    border-color: var(--primary-green);
+  }
+
+  .demo-tab.active {
+    background: var(--primary-green);
+    color: white;
+    border-color: var(--primary-green);
+  }
+
+  .demo-viewer {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .demo-content {
+    padding: 2rem;
+  }
+
+  .demo-hero {
+    text-align: center;
+    padding: 2rem;
+    background: var(--gradient-green);
+    color: white;
+    margin: -2rem -2rem 2rem -2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .demo-hero::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
+  .demo-hero h1 {
+    color: white;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+  }
+
+  .demo-hero p {
+    color: var(--accent-yellow);
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+  }
+
+  .demo-cta {
     display: flex;
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
   }
 
-  /* Quick Info Section */
-  .info-grid {
+  .demo-sections {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .demo-section-item {
+    text-align: center;
+    padding: 1rem;
+    background: var(--light-gray);
+    border-radius: var(--border-radius);
+  }
+
+  .demo-section-item h3 {
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+  }
+
+  .demo-pricing {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
-    margin-top: 3rem;
+    margin-bottom: 2rem;
   }
 
-  /* About Preview */
-  .about-content {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 4rem;
-    align-items: center;
-  }
-
-  .lead-text {
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: var(--primary-green);
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-  }
-
-  .features-list {
-    margin: 2rem 0;
-  }
-
-  .feature-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    font-weight: 500;
-  }
-
-  .feature-icon {
-    font-size: 1.5rem;
-    margin-right: 1rem;
-    width: 2rem;
-  }
-
-  .image-placeholder {
-    background: linear-gradient(
-      135deg,
-      var(--light-green),
-      var(--primary-green)
-    );
-    height: 400px;
-    border-radius: var(--border-radius-large);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--white);
+  .price-card {
+    border: 2px solid var(--light-gray);
+    border-radius: var(--border-radius);
+    padding: 2rem;
     text-align: center;
   }
 
-  .placeholder-content h4 {
-    color: var(--white);
+  .price-card h3 {
     margin-bottom: 1rem;
-    font-size: 1.5rem;
+    color: var(--text-dark);
   }
 
-  .placeholder-content p {
-    color: rgba(255, 255, 255, 0.9);
+  .price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+  }
+
+  .price-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+  }
+
+  .price-card li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--light-gray);
+  }
+
+  .demo-help {
+    text-align: center;
+    padding: 1.5rem;
+    background: var(--light-gray);
+    border-radius: var(--border-radius);
+  }
+
+  .demo-about {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .about-section h3 {
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+  }
+
+  .about-section p {
+    color: var(--medium-gray);
+    line-height: 1.6;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .gallery-item {
+    background: var(--light-gray);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    color: var(--medium-gray);
+  }
+
+  .demo-footer {
+    text-align: center;
+    padding: 1rem;
+    background: var(--light-gray);
+    border-radius: var(--border-radius);
+    color: var(--medium-gray);
+  }
+
+  /* Testimonials */
+  .testimonials {
+    padding: 4rem 0;
+    background: var(--light-gray);
+  }
+
+  .testimonials h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 2.5rem;
+    color: var(--text-dark);
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .testimonial p {
+    font-style: italic;
     font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--medium-gray);
   }
 
-  /* Sponsorship CTA */
-  .sponsorship-cta {
-    background: linear-gradient(
-      135deg,
-      var(--light-gray) 0%,
-      var(--white) 100%
-    );
+  .testimonial-author strong {
+    color: var(--text-dark);
+  }
+
+  .testimonial-author span {
+    color: var(--medium-gray);
+    display: block;
+    font-size: 0.9rem;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    padding: 4rem 0;
   }
 
   .cta-content {
     text-align: center;
-    max-width: 800px;
-    margin: 0 auto;
   }
 
-  .cta-text {
-    font-size: 1.2rem;
+  .cta-content h2 {
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    color: var(--text-dark);
+  }
+
+  .cta-content p {
     margin-bottom: 2rem;
-    color: var(--dark-gray);
+    font-size: 1.1rem;
+    color: var(--medium-gray);
   }
 
-  .cta-highlights {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--medium-gray);
+  }
+
+  .signup-form {
+    padding: 2rem;
+  }
+
+  .signup-form h2 {
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+  }
+
+  .signup-form p {
+    margin-bottom: 2rem;
+    color: var(--medium-gray);
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-dark);
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+  }
+
+  .signup-benefits {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+  }
+
+  .benefit {
+    color: var(--primary-green);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .modal-actions {
     margin: 2rem 0;
   }
 
-  .highlight-item {
-    background: var(--white);
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    text-align: left;
+  .signup-note {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--medium-gray);
   }
 
-  .highlight-item strong {
-    color: var(--primary-green);
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-    display: block;
-  }
-
-  .highlight-item span {
-    color: var(--dark-gray);
-    font-size: 0.95rem;
-  }
-
-  /* Mobile Responsiveness */
+  /* Responsive Design */
   @media (max-width: 768px) {
-    .countdown {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
-
-    .time-unit {
-      padding: 1rem 0.5rem;
-    }
-
-    .hero-buttons {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .hero-buttons .btn {
-      width: 100%;
-      max-width: 300px;
-    }
-
-    .about-content {
-      grid-template-columns: 1fr;
+    .hero-stats {
       gap: 2rem;
     }
 
-    .info-grid {
+    .stat {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .features-grid {
       grid-template-columns: 1fr;
-      gap: 1rem;
     }
 
-    .cta-highlights {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .countdown-container {
-      padding: 1.5rem;
-      margin: 2rem auto;
-    }
-
-    .countdown {
-      grid-template-columns: repeat(4, 1fr);
+    .demo-tabs {
       gap: 0.5rem;
     }
 
-    .time-unit {
-      padding: 1rem 0.5rem;
+    .demo-tab {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
     }
 
-    .time-number {
-      font-size: 1.5rem;
+    .demo-sections {
+      grid-template-columns: 1fr;
     }
 
-    .time-label {
-      font-size: 0.7rem;
+    .demo-pricing {
+      grid-template-columns: 1fr;
     }
 
-    .info-card {
-      padding: 1.5rem;
-    }
-
-    .info-icon {
-      font-size: 2.5rem;
+    .testimonials-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>

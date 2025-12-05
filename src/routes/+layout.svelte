@@ -39,12 +39,12 @@
   }
 </script>
 
-<nav class="navbar" role="navigation" aria-label="Main Navigation">
+<nav class="navbar" aria-label="Main Navigation">
   <div class="nav-container">
     <!-- Logo -->
     <div class="nav-logo">
       <a href={isAdmin ? "/admin/dashboard" : "/"} class="logo-link">
-        <h2>IBM Charity Golf Tournament</h2>
+        <h2>Pinpoint Golf</h2>
       </a>
     </div>
 
@@ -74,20 +74,17 @@
       <div class="nav-right">
         <ul class="nav-menu" class:nav-menu-active={mobileMenuOpen}>
           <li>
-            <a
-              href="/register"
-              class="nav-link"
-              class:active={$page.url.pathname === "/register"}
-              on:click={() => (mobileMenuOpen = false)}>Register</a
+            <button
+              class="nav-link demo-link"
+              on:click={() => {
+                document
+                  .querySelector(".demo-section")
+                  ?.scrollIntoView({ behavior: "smooth" });
+                mobileMenuOpen = false;
+              }}
             >
-          </li>
-          <li>
-            <a
-              href="/tournament-details"
-              class="nav-link"
-              class:active={$page.url.pathname === "/tournament-details"}
-              on:click={() => (mobileMenuOpen = false)}>Details</a
-            >
+              Demo
+            </button>
           </li>
           <li>
             <a
@@ -99,26 +96,18 @@
           </li>
           <li>
             <a
-              href="/sponsorship"
-              class="nav-link"
-              class:active={$page.url.pathname === "/sponsorship"}
-              on:click={() => (mobileMenuOpen = false)}>Sponsorship</a
+              href="/signup"
+              class="nav-link cta-link"
+              class:active={$page.url.pathname === "/signup"}
+              on:click={() => (mobileMenuOpen = false)}>Sign Up</a
             >
           </li>
           <li>
             <a
-              href="/leaderboard"
+              href="/login"
               class="nav-link"
-              class:active={$page.url.pathname === "/leaderboard"}
-              on:click={() => (mobileMenuOpen = false)}>Leaderboard</a
-            >
-          </li>
-          <li>
-            <a
-              href="/contact"
-              class="nav-link"
-              class:active={$page.url.pathname === "/contact"}
-              on:click={() => (mobileMenuOpen = false)}>Contact</a
+              class:active={$page.url.pathname === "/login"}
+              on:click={() => (mobileMenuOpen = false)}>Login</a
             >
           </li>
         </ul>
@@ -147,56 +136,54 @@
   <div class="container">
     <div class="footer-content">
       <div class="footer-section">
-        <h4>IBM Charity Golf Tournament</h4>
+        <h4>Pinpoint Golf</h4>
         <p>
-          Supporting CHARITY TBD and making a difference in our community
-          through the power of golf.
+          The free platform for creating professional golf tournament websites.
+          Build stunning tournament sites in minutes.
         </p>
-        <div class="tournament-info">
-          <p><strong>June 12, 2026</strong></p>
-          <p>12:00 PM EST Start</p>
+        <div class="platform-info">
+          <p><strong>500+ Tournaments Created</strong></p>
+          <p>Trusted by organizers worldwide</p>
         </div>
       </div>
       <div class="footer-section">
         <h4>Quick Links</h4>
         <ul class="footer-links">
-          <li><a href="/about">About Tournament</a></li>
-          <li><a href="/sponsorship">Sponsorship</a></li>
-          <li><a href="/register">Register</a></li>
-          <li><a href="/volunteer">Volunteer</a></li>
-          <li><a href="/history">Tournament History</a></li>
-          <li><a href="/leaderboard">Live Leaderboard</a></li>
+          <li><a href="/about">About Platform</a></li>
+          <li><a href="/register">Create Tournament</a></li>
+          <li><a href="/login">Login</a></li>
+          <li><a href="/contact">Contact Support</a></li>
+          <li><a href="/features">Features</a></li>
+          <li><a href="/pricing">Pricing</a></li>
         </ul>
       </div>
       <div class="footer-section">
-        <h4>Contact</h4>
+        <h4>Support</h4>
         <div class="contact-info">
-          <p>Email: tournament@ibm.com</p>
+          <p>Email: support@pinpointgolf.com</p>
           <p>Phone: (555) 123-4567</p>
-          <p>Tournament Director: John Smith</p>
+          <p>Help Center: help.pinpointgolf.com</p>
         </div>
         <br />
-        {#if !isAdmin}
-          <a href="/admin/login" class="admin-footer-link">Admin Login</a>
-        {/if}
+        <a href="/register" class="cta-footer-link">Start Building Free</a>
       </div>
       <div class="footer-section">
-        <h4>CHARITY TBD</h4>
+        <h4>For Tournament Organizers</h4>
         <p>
-          Learn more about the charity that started it all and continues to
-          inspire our annual tournament.
+          Join hundreds of successful tournament organizers who trust Pinpoint
+          Golf for their events. Easy setup, professional results.
         </p>
         <div class="social-links">
-          <p>Follow our tournament updates</p>
+          <p>Follow us for updates and tips</p>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
       <div class="footer-bottom-content">
         <div class="footer-main">
-          <p>&copy; 2025 IBM Charity Golf Tournament. All rights reserved.</p>
+          <p>&copy; 2025 Pinpoint Golf. All rights reserved.</p>
           <p class="footer-tagline">
-            Building communities through golf and giving back.
+            Empowering golf tournaments worldwide with professional websites.
           </p>
         </div>
       </div>
@@ -209,17 +196,14 @@
      Navigation Styles
      ======================= */
   .navbar {
-    background: linear-gradient(
-      135deg,
-      var(--primary-green) 0%,
-      var(--light-green) 100%
-    );
+    background: var(--gradient-green);
     padding: 0.75rem 1rem;
     position: sticky;
     top: 0;
     width: 100%;
     z-index: 1000;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-elevated);
+    backdrop-filter: blur(10px);
   }
 
   .nav-container {
@@ -255,26 +239,65 @@
 
   .nav-menu {
     display: flex;
-    gap: clamp(0.5rem, 2vw, 1.5rem);
+    align-items: center;
+    gap: clamp(0.3rem, 1.5vw, 1rem);
     list-style: none;
     margin: 0;
     padding: 0;
     white-space: nowrap;
+    flex-wrap: nowrap;
   }
 
   .nav-link {
     color: var(--white);
     text-decoration: none;
     font-weight: 500;
-    padding: 0.5rem clamp(0.5rem, 1.5vw, 1rem);
+    padding: 0.4rem clamp(0.4rem, 1vw, 0.8rem);
     border-radius: var(--border-radius);
     transition: var(--transition);
     white-space: nowrap;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    box-sizing: border-box;
   }
 
   .nav-link:hover,
   .nav-link.active {
     background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .demo-link {
+    background: var(--dark-green);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .demo-link:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .cta-link {
+    background: var(--accent-yellow) !important;
+    color: var(--text-dark) !important;
+    font-weight: 600;
+    border: 1px solid var(--accent-yellow);
+  }
+
+  .cta-link:hover {
+    background: #ffd700 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
   .admin-logout-btn {
@@ -338,16 +361,6 @@
     background-color: var(--text-dark);
   }
 
-  .nav-toggle-active .bar:nth-child(1) {
-    transform: rotate(-45deg) translate(-5px, 6px);
-  }
-  .nav-toggle-active .bar:nth-child(2) {
-    opacity: 0;
-  }
-  .nav-toggle-active .bar:nth-child(3) {
-    transform: rotate(45deg) translate(-5px, -6px);
-  }
-
   /* =======================
      Main Content
      ======================= */
@@ -359,14 +372,27 @@
      Footer
      ======================= */
   .footer {
+    background: var(--gradient-green);
+    color: var(--white);
+    padding: 3rem 1rem 1rem;
+    position: relative;
+  }
+
+  .footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: linear-gradient(
       135deg,
       var(--primary-green) 0%,
       var(--light-green) 50%,
       var(--primary-green) 100%
     );
-    color: var(--white);
-    padding: 3rem 1rem 1rem;
+    opacity: 0.95;
+    z-index: -1;
   }
   .footer-content {
     display: grid;
@@ -386,15 +412,6 @@
     color: rgba(255, 255, 255, 0.9);
     margin-bottom: 0.5rem;
     line-height: 1.5;
-  }
-  .tournament-info {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  .tournament-info p:first-child {
-    color: var(--accent-yellow);
-    font-weight: 600;
   }
   .footer-links {
     list-style: none;
@@ -445,27 +462,39 @@
     font-style: italic;
     color: rgba(255, 255, 255, 0.7);
   }
-  .admin-footer-link {
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    transition: var(--transition);
-    background: rgba(255, 255, 255, 0.1);
-  }
-  .admin-footer-link:hover {
+  .cta-footer-link {
     color: var(--text-dark);
-    border-color: var(--accent-yellow);
-    background-color: var(--accent-yellow);
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    border: 2px solid var(--accent-yellow);
+    transition: var(--transition);
+    background: var(--accent-yellow);
+    font-weight: 600;
+    display: inline-block;
+  }
+  .cta-footer-link:hover {
+    color: var(--white);
+    border-color: var(--white);
+    background-color: transparent;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .platform-info {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .platform-info p:first-child {
+    color: var(--accent-yellow);
+    font-weight: 600;
   }
 
   /* =======================
      Responsive
      ======================= */
-  @media (max-width: 1250px) {
+  @media (max-width: 1100px) {
     .nav-toggle {
       display: flex;
     }

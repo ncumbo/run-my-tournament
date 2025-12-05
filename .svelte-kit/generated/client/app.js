@@ -14,24 +14,47 @@ export const nodes = [
 	() => import('./nodes/10'),
 	() => import('./nodes/11'),
 	() => import('./nodes/12'),
-	() => import('./nodes/13')
+	() => import('./nodes/13'),
+	() => import('./nodes/14'),
+	() => import('./nodes/15'),
+	() => import('./nodes/16'),
+	() => import('./nodes/17'),
+	() => import('./nodes/18'),
+	() => import('./nodes/19'),
+	() => import('./nodes/20'),
+	() => import('./nodes/21'),
+	() => import('./nodes/22'),
+	() => import('./nodes/23'),
+	() => import('./nodes/24'),
+	() => import('./nodes/25'),
+	() => import('./nodes/26')
 ];
 
-export const server_loads = [];
+export const server_loads = [2];
 
 export const dictionary = {
-		"/": [2],
-		"/about": [3],
-		"/admin/dashboard": [4],
-		"/admin/login": [5],
-		"/admin/register": [6],
-		"/contact": [7],
-		"/history": [8],
-		"/leaderboard": [9],
-		"/register": [10],
-		"/sponsorship": [11],
-		"/tournament-details": [12],
-		"/volunteer": [13]
+		"/": [5],
+		"/about": [7],
+		"/admin/dashboard": [8],
+		"/admin/login": [9],
+		"/admin/register": [10],
+		"/contact": [11],
+		"/dashboard": [12,[4]],
+		"/dashboard/analytics": [13,[4]],
+		"/dashboard/customization": [14,[4]],
+		"/dashboard/domains": [15,[4]],
+		"/dashboard/payments": [16,[4]],
+		"/dashboard/tournaments": [17,[4]],
+		"/dashboard/tournaments/create": [18,[4]],
+		"/history": [19],
+		"/leaderboard": [20],
+		"/login": [21],
+		"/register": [22],
+		"/signup": [23],
+		"/sponsorship": [24],
+		"/tournament-details": [25],
+		"/volunteer": [26],
+		"/[subdomain]": [6,[2]]
 	};
 
 export const hooks = {

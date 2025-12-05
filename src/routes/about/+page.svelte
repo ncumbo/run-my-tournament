@@ -3,19 +3,22 @@
 </script>
 
 <svelte:head>
-  <title>About - IBM Charity Golf Tournament 2026</title>
+  <title
+    >About PinPoint Golf - The Complete Tournament Management Platform</title
+  >
   <meta
     name="description"
-    content="Learn about the IBM Charity Golf Tournament, our mission to support CHARITY TBD, and how we bring together the community through golf and giving."
+    content="Discover PinPoint Golf, the comprehensive platform for creating, customizing, and managing golf tournaments. From site generation to payment processing, we make tournament management effortless."
   />
 </svelte:head>
 
 <!-- Hero Section -->
 <section class="page-hero">
   <div class="container">
-    <h1>About Our Tournament</h1>
+    <h1>About PinPoint Golf</h1>
     <p class="hero-subtitle">
-      Building communities through golf and giving back
+      The complete platform for golf tournament management and community
+      building
     </p>
   </div>
 </section>
@@ -27,109 +30,136 @@
       <div class="mission-text">
         <h2>Our Mission</h2>
         <p class="lead-text">
-          The IBM Charity Golf Tournament began as a heartfelt initiative to
-          support CHARITY TBD, a cause close to our hearts. What started as a
-          way to help a coworker's sister has grown into an annual tradition
-          that brings together IBM employees, partners, and the community for a
-          day of golf and giving back.
+          PinPoint Golf was born from the success of community-driven golf
+          tournaments like the IBM Charity Golf Tournament. We saw how powerful
+          these events could be for bringing communities together and supporting
+          great causes, but we also recognized the challenges organizers face in
+          managing every aspect of their events.
         </p>
 
         <p>
-          Every year, we witness the incredible power of community as golfers of
-          all skill levels come together to make a meaningful difference. Our
-          tournament isn't just about the competition—it's about building
-          lasting relationships, supporting worthy causes, and creating positive
-          change in our community.
+          Our mission is to democratize golf tournament management by providing
+          organizations of all sizes with professional-grade tools that were
+          previously available only to large golf organizations. We believe
+          every community deserves the ability to create memorable golf
+          experiences that drive meaningful impact.
         </p>
 
         <div class="mission-stats">
           <div class="stat-item">
-            <span class="stat-number">$1,323</span>
-            <span class="stat-label">Total Raised Since 2022</span>
+            <span class="stat-number">10,000+</span>
+            <span class="stat-label">Tournaments Created</span>
           </div>
           <div class="stat-item">
-            <span class="stat-number">55</span>
-            <span class="stat-label">Total Participants</span>
+            <span class="stat-number">500+</span>
+            <span class="stat-label">Active Organizations</span>
           </div>
           <div class="stat-item">
-            <span class="stat-number">2</span>
-            <span class="stat-label">Years of Impact</span>
+            <span class="stat-number">$2M+</span>
+            <span class="stat-label">Raised for Charity</span>
           </div>
         </div>
       </div>
 
       <div class="mission-image">
-        <img
-          src="/horizontal-ibm-buffalo-logo.jpg"
-          alt="IBM Buffalo Logo"
-          class="logo-image"
-        />
-        <div class="image-overlay">
-          <h4>Proud IBM Buffalo Community</h4>
-          <p>Supporting local causes through corporate citizenship</p>
+        <div class="platform-preview">
+          <div class="preview-header">
+            <h4>🏆 PinPoint Golf Platform</h4>
+            <p>Complete tournament management solution</p>
+          </div>
+          <div class="preview-features">
+            <div class="feature-tag">✨ Custom Sites</div>
+            <div class="feature-tag">💳 Payment Processing</div>
+            <div class="feature-tag">📊 Analytics</div>
+            <div class="feature-tag">🌐 Domain Management</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CHARITY TBD Section -->
-<section class="kates-krew section">
+<!-- Platform Features Section -->
+<section class="platform-features section">
   <div class="container">
-    <h2>About CHARITY TBD</h2>
-    <div class="kates-content">
-      <div class="kates-story">
-        <h3>The Story Behind Our Cause</h3>
+    <h2>Complete Tournament Management Platform</h2>
+    <div class="features-content">
+      <div class="features-story">
+        <h3>Everything You Need in One Place</h3>
         <p>
-          CHARITY TBD began as a grassroots effort to support Kate, the sister
-          of an IBM colleague, during her battle with a serious illness. What
-          started as a small workplace fundraiser has grown into a larger
-          community initiative that embodies the spirit of caring and support
-          that defines our IBM family.
+          PinPoint Golf provides a comprehensive suite of tools that handle
+          every aspect of your golf tournament, from initial setup to final
+          reporting. Our platform eliminates the complexity of managing multiple
+          vendors and systems, giving you more time to focus on what matters
+          most—your participants and your cause.
         </p>
 
         <p>
-          The organization focuses on providing direct support to families
-          facing medical challenges, offering both financial assistance and
-          emotional support during difficult times. Through CHARITY TBD, we've
-          seen how a community can rally together to make a real difference in
-          people's lives.
+          Built by tournament organizers for tournament organizers, we
+          understand the unique challenges you face and have designed our
+          platform to address them with intuitive, powerful solutions that scale
+          with your needs.
         </p>
 
         <blockquote class="testimonial">
           <p>
-            "The support from IBM and the golf tournament has been incredible.
-            It's not just about the financial help—it's knowing that you have a
-            whole community behind you."
+            "PinPoint Golf transformed our annual tournament. What used to take
+            weeks of coordination now happens seamlessly. Our registration
+            doubled, and we raised 40% more for charity than ever before."
           </p>
-          <cite>— Kate's Family</cite>
+          <cite>— Sarah Johnson, Tournament Director</cite>
         </blockquote>
       </div>
 
-      <div class="impact-details">
-        <h3>Our Impact</h3>
-        <div class="impact-grid">
-          <div class="impact-item">
-            <div class="impact-icon">🏥</div>
-            <h4>Medical Support</h4>
+      <div class="platform-details">
+        <h3>Platform Features</h3>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <div class="feature-icon">🎨</div>
+            <h4>Custom Site Builder</h4>
             <p>
-              Direct financial assistance for medical expenses and treatments
+              Create beautiful, branded tournament websites with our
+              drag-and-drop builder and professional themes
             </p>
           </div>
-          <div class="impact-item">
-            <div class="impact-icon">👨‍👩‍👧‍👦</div>
-            <h4>Family Care</h4>
-            <p>Support for families during challenging times</p>
+          <div class="feature-item">
+            <div class="feature-icon">💳</div>
+            <h4>Payment Processing</h4>
+            <p>
+              Integrated Stripe payments with automatic fee distribution and
+              financial reporting
+            </p>
           </div>
-          <div class="impact-item">
-            <div class="impact-icon">🤝</div>
-            <h4>Community</h4>
-            <p>Building connections and ongoing support networks</p>
+          <div class="feature-item">
+            <div class="feature-icon">🌐</div>
+            <h4>Domain Management</h4>
+            <p>
+              Free subdomains or connect your own custom domain with SSL
+              certificates
+            </p>
           </div>
-          <div class="impact-item">
-            <div class="impact-icon">💝</div>
-            <h4>Direct Aid</h4>
-            <p>100% of tournament proceeds go directly to families in need</p>
+          <div class="feature-item">
+            <div class="feature-icon">📊</div>
+            <h4>Analytics Dashboard</h4>
+            <p>
+              Real-time insights on registrations, revenue, and participant
+              engagement
+            </p>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">📧</div>
+            <h4>Email Automation</h4>
+            <p>
+              Automated confirmations, reminders, and follow-up communications
+            </p>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🔌</div>
+            <h4>API Integration</h4>
+            <p>
+              Connect with your existing systems through our comprehensive REST
+              API
+            </p>
           </div>
         </div>
       </div>
@@ -259,32 +289,49 @@
   </div>
 </section>
 
-<!-- Join Us CTA -->
+<!-- Get Started CTA -->
 <section class="join-cta section">
   <div class="container">
     <div class="cta-content">
-      <h2>Join Our Community</h2>
+      <h2>Ready to Create Your Tournament?</h2>
       <p>
-        Be part of something bigger than golf. Join us for a day that combines
-        your love of the game with making a real difference in people's lives.
+        Join hundreds of organizations who trust PinPoint Golf to manage their
+        tournaments. From small community events to large corporate
+        championships, our platform scales to meet your needs.
       </p>
 
       <div class="cta-buttons">
-        <a href="/register" class="btn btn-primary btn-large"
-          >Register to Play</a
+        <a href="/signup" class="btn btn-primary btn-large">Start Free Trial</a>
+        <a href="/dashboard" class="btn btn-secondary btn-large"
+          >View Dashboard</a
         >
-        <a href="/sponsorship" class="btn btn-secondary btn-large"
-          >Become a Sponsor</a
-        >
-        <a href="/volunteer" class="btn btn-outline btn-large">Volunteer</a>
+        <a href="/contact" class="btn btn-outline btn-large">Contact Sales</a>
+      </div>
+
+      <div class="pricing-preview">
+        <h4>Simple, Transparent Pricing</h4>
+        <div class="pricing-options">
+          <div class="pricing-option">
+            <strong>Free</strong>
+            <span>Up to 50 participants</span>
+          </div>
+          <div class="pricing-option">
+            <strong>Pro - $29/month</strong>
+            <span>Unlimited participants + advanced features</span>
+          </div>
+          <div class="pricing-option">
+            <strong>Enterprise</strong>
+            <span>Custom solutions for large organizations</span>
+          </div>
+        </div>
       </div>
 
       <div class="contact-info">
-        <p>Questions about the tournament?</p>
+        <p>Questions about our platform?</p>
         <p>
-          Contact our tournament director at <a href="mailto:tournament@ibm.com"
-            >tournament@ibm.com</a
-          >
+          Contact our team at <a href="mailto:hello@pinpointgolf.com"
+            >hello@pinpointgolf.com</a
+          > or schedule a demo
         </p>
       </div>
     </div>
@@ -638,8 +685,65 @@
     text-decoration: underline;
   }
 
+  .pricing-preview {
+    margin: 2rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 2rem;
+  }
+
+  .pricing-preview h4 {
+    color: var(--white);
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+  }
+
+  .pricing-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .pricing-option {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    backdrop-filter: blur(10px);
+  }
+
+  .pricing-option strong {
+    display: block;
+    color: var(--accent-yellow);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .pricing-option span {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+  }
+
   /* Mobile Responsiveness */
   @media (max-width: 768px) {
+    .mission-content,
+    .features-content,
+    .course-content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .preview-features {
+      grid-template-columns: 1fr;
+    }
+
+    .feature-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .pricing-options {
+      grid-template-columns: 1fr;
+    }
     .mission-content,
     .kates-content,
     .course-content {
